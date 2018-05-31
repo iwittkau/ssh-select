@@ -57,3 +57,24 @@ func WriteToUserHomeDir(conf *sshselect.Configuration) error {
 
 	return err
 }
+
+// Init initializes a configuration file in the users home directory
+func Init() error {
+	c := sshselect.Configuration{
+		Servers: []sshselect.Server{
+			sshselect.Server{
+				Name:      "Server 1 (Example)",
+				IpAddress: "192.168.0.1",
+				Username:  "username",
+				Profile:   "Homebrew",
+			},
+			sshselect.Server{
+				Name:      "Server 2 (Example)",
+				IpAddress: "192.168.0.2",
+				Username:  "username",
+				Profile:   "Homebrew",
+			},
+		},
+	}
+	return WriteToUserHomeDir(&c)
+}

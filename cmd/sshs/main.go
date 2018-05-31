@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/iwittkau/ssh-select"
-
 	"strconv"
 
 	"github.com/iwittkau/ssh-select/configuration"
@@ -25,25 +23,7 @@ func main() {
 		fmt.Println("Configuration error: " + err.Error() + ".\nRun 'sshs --help' for more information.")
 		return
 	} else if err != nil && init {
-		c := sshselect.Configuration{
-			Servers: []sshselect.Server{
-				sshselect.Server{
-					Name:      "Server 1 (Example)",
-					IpAddress: "192.168.0.1",
-					Username:  "username",
-					Profile:   "Homebrew",
-					Index:     0,
-				},
-				sshselect.Server{
-					Name:      "Server 2 (Example)",
-					IpAddress: "192.168.0.2",
-					Username:  "username",
-					Profile:   "Homebrew",
-					Index:     1,
-				},
-			},
-		}
-		if err := configuration.WriteToUserHomeDir(&c); err != nil {
+		if err := configuration.Init(); err != nil {
 			fmt.Println("Error creating configuration: " + err.Error())
 			return
 		}
@@ -55,11 +35,10 @@ func main() {
 	}
 
 	var i int
-	var selected bool
 
 	if len(os.Args) == 2 {
 
-		i, err := strconv.Atoi(os.Args[1])
+		i, err = strconv.Atoi(os.Args[1])
 		if err != nil {
 			fmt.Println("Not a number: ", os.Args[1])
 			return
@@ -77,6 +56,8 @@ func main() {
 
 	} else {
 
+		var selected bool
+
 		//f := promptui.New(config)
 
 		f, err := gocui.New(config)
@@ -89,12 +70,14 @@ func main() {
 		i, selected, err = f.Draw()
 
 		if err != nil {
-			fmt.Println("", err)
+			fmt.Println("Frontend:", err.Error())
 			return
 		} else if !selected {
 			return
 		}
 	}
+
+	fmt.Println(i)
 
 	err = osascript.NewSSHTerminalWindow(config.Servers[i].Username, config.Servers[i].IpAddress)
 	if err != nil {

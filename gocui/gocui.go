@@ -3,7 +3,6 @@ package gocui
 import (
 	"fmt"
 	"sync"
-	"time"
 
 	"github.com/iwittkau/ssh-select"
 
@@ -58,18 +57,37 @@ func (f *Frontend) layout(g *gocui.Gui) error {
 		return err
 	}
 
+	_, sY := main.Size()
+
+	if err = main.SetOrigin(0, 0); err != nil {
+		return err
+	}
+
+	if i >= sY {
+		if err = main.SetOrigin(0, i-sY+1); err != nil {
+			return err
+		}
+		if err := main.SetCursor(0, sY-1); err != nil {
+			return err
+		}
+	} else if err := main.SetCursor(0, i); err != nil {
+		return err
+	}
+
 	main.Clear()
+	main.Title = " Servers "
 	main.Highlight = true
 	main.SelBgColor = gocui.ColorRed
 	main.SelFgColor = gocui.ColorWhite
 
 	for _, s := range f.conf.Servers {
-		str := fmt.Sprintf("[%d] %s", s.Index, s.Name)
-		fmt.Fprintln(main, str)
-	}
 
-	if err := main.SetCursor(0, i); err != nil {
-		return err
+		if s.Index < 10 {
+			fmt.Fprintf(main, "  %d: %s \n", s.Index, s.Name)
+		} else {
+			fmt.Fprintf(main, " %d: %s \n", s.Index, s.Name)
+		}
+
 	}
 
 	detail, err := g.SetView("detail", 0, maxY-9, maxX-31, maxY-1)
@@ -78,11 +96,13 @@ func (f *Frontend) layout(g *gocui.Gui) error {
 	}
 
 	detail.Clear()
+	detail.Title = " Connection Details "
 	fmt.Fprintln(detail, " ")
-	fmt.Fprintf(detail, " Selected : %d\n", i+1)
-	fmt.Fprintf(detail, " IP       : %s\n", f.conf.Servers[i].IpAddress)
-	fmt.Fprintf(detail, " Username : %s\n", f.conf.Servers[i].Username)
-	fmt.Fprintf(detail, " %s", time.Now().String())
+	// fmt.Fprintf(detail, " Selected : %d\n", i+1)
+	fmt.Fprintf(detail, " Host     : %s\n", f.conf.Servers[i].IpAddress)
+	fmt.Fprintf(detail, " Username : %s\n\n", f.conf.Servers[i].Username)
+	fmt.Fprintf(detail, " Profile  : %s\n", f.conf.Servers[i].Profile)
+	// fmt.Fprintf(detail, " %s", time.Now().String())
 
 	help, err := g.SetView("help", maxX-30, maxY-9, maxX-1, maxY-1)
 	if err != nil && err != gocui.ErrUnknownView {
@@ -90,11 +110,14 @@ func (f *Frontend) layout(g *gocui.Gui) error {
 	}
 
 	help.Clear()
+	help.Title = " Keybindings "
 	fmt.Fprintln(help, " ")
 	fmt.Fprintln(help, "    ↑ ↓: Select")
 	fmt.Fprintln(help, "     ↵ : Connect")
 	fmt.Fprintln(help, "     ^C: Exit")
 	fmt.Fprintln(help, " F1-F12: Direct selection")
+	// fmt.Fprintf(help, " Origin x,y: %d,%d", oX, oY)
+	// fmt.Fprintf(help, " Index: %d", i)
 
 	if _, err := g.SetCurrentView("main"); err != nil {
 		return err
@@ -132,6 +155,86 @@ func (f *Frontend) initKeybindings(g *gocui.Gui) error {
 
 	if err := g.SetKeybinding("", gocui.KeyF2, gocui.ModNone, func(g *gocui.Gui, v *gocui.View) error {
 		f.SetIndex(1)
+		f.SetHasSelected(true)
+		return gocui.ErrQuit
+	}); err != nil {
+		return err
+	}
+
+	if err := g.SetKeybinding("", gocui.KeyF3, gocui.ModNone, func(g *gocui.Gui, v *gocui.View) error {
+		f.SetIndex(2)
+		f.SetHasSelected(true)
+		return gocui.ErrQuit
+	}); err != nil {
+		return err
+	}
+
+	if err := g.SetKeybinding("", gocui.KeyF4, gocui.ModNone, func(g *gocui.Gui, v *gocui.View) error {
+		f.SetIndex(3)
+		f.SetHasSelected(true)
+		return gocui.ErrQuit
+	}); err != nil {
+		return err
+	}
+
+	if err := g.SetKeybinding("", gocui.KeyF5, gocui.ModNone, func(g *gocui.Gui, v *gocui.View) error {
+		f.SetIndex(4)
+		f.SetHasSelected(true)
+		return gocui.ErrQuit
+	}); err != nil {
+		return err
+	}
+
+	if err := g.SetKeybinding("", gocui.KeyF6, gocui.ModNone, func(g *gocui.Gui, v *gocui.View) error {
+		f.SetIndex(5)
+		f.SetHasSelected(true)
+		return gocui.ErrQuit
+	}); err != nil {
+		return err
+	}
+
+	if err := g.SetKeybinding("", gocui.KeyF7, gocui.ModNone, func(g *gocui.Gui, v *gocui.View) error {
+		f.SetIndex(6)
+		f.SetHasSelected(true)
+		return gocui.ErrQuit
+	}); err != nil {
+		return err
+	}
+
+	if err := g.SetKeybinding("", gocui.KeyF8, gocui.ModNone, func(g *gocui.Gui, v *gocui.View) error {
+		f.SetIndex(7)
+		f.SetHasSelected(true)
+		return gocui.ErrQuit
+	}); err != nil {
+		return err
+	}
+
+	if err := g.SetKeybinding("", gocui.KeyF9, gocui.ModNone, func(g *gocui.Gui, v *gocui.View) error {
+		f.SetIndex(8)
+		f.SetHasSelected(true)
+		return gocui.ErrQuit
+	}); err != nil {
+		return err
+	}
+
+	if err := g.SetKeybinding("", gocui.KeyF10, gocui.ModNone, func(g *gocui.Gui, v *gocui.View) error {
+		f.SetIndex(9)
+		f.SetHasSelected(true)
+		return gocui.ErrQuit
+	}); err != nil {
+		return err
+	}
+
+	if err := g.SetKeybinding("", gocui.KeyF11, gocui.ModNone, func(g *gocui.Gui, v *gocui.View) error {
+		f.SetIndex(10)
+		f.SetHasSelected(true)
+		return gocui.ErrQuit
+	}); err != nil {
+		return err
+	}
+
+	if err := g.SetKeybinding("", gocui.KeyF12, gocui.ModNone, func(g *gocui.Gui, v *gocui.View) error {
+		f.SetIndex(11)
 		f.SetHasSelected(true)
 		return gocui.ErrQuit
 	}); err != nil {
@@ -183,6 +286,12 @@ func (f *Frontend) Index() int {
 	f.mux.Lock()
 	defer f.mux.Unlock()
 	return f.index
+}
+
+func (f *Frontend) MaxIndex() int {
+	f.mux.Lock()
+	defer f.mux.Unlock()
+	return len(f.conf.Servers)
 }
 
 func (f *Frontend) SetHasSelected(t bool) {

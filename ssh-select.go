@@ -9,7 +9,7 @@ type Server struct {
 	IpAddress string
 	Username  string
 	Profile   string
-	Index     int
+	Index     int `yaml:",omitempty"`
 }
 
 type Frontend interface {

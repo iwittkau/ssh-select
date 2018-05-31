@@ -77,8 +77,6 @@ func main() {
 		}
 	}
 
-	fmt.Println(i)
-
 	err = osascript.NewSSHTerminalWindow(config.Servers[i].Username, config.Servers[i].IpAddress)
 	if err != nil {
 		panic(err)

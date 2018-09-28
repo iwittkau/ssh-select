@@ -38,8 +38,9 @@ func New(conf *sshselect.Configuration) (*Frontend, error) {
 	return f, err
 }
 
-func (f *Frontend) Draw() (int, bool, error) {
+func (f *Frontend) Draw(selected int) (int, bool, error) {
 	defer f.g.Close()
+	f.SetIndex(selected)
 
 	if err := f.g.MainLoop(); err != nil && err != gocui.ErrQuit {
 		return f.Index(), f.HasSelected(), err
@@ -98,11 +99,9 @@ func (f *Frontend) layout(g *gocui.Gui) error {
 	detail.Clear()
 	detail.Title = " Connection Details "
 	fmt.Fprintln(detail, " ")
-	// fmt.Fprintf(detail, " Selected : %d\n", i+1)
-	fmt.Fprintf(detail, " Host     : %s\n", f.conf.Servers[i].IpAddress)
+	fmt.Fprintf(detail, " Host     : %s\n", f.conf.Servers[i].IPAddress)
 	fmt.Fprintf(detail, " Username : %s\n\n", f.conf.Servers[i].Username)
 	fmt.Fprintf(detail, " Profile  : %s\n", f.conf.Servers[i].Profile)
-	// fmt.Fprintf(detail, " %s", time.Now().String())
 
 	help, err := g.SetView("help", maxX-30, maxY-9, maxX-1, maxY-1)
 	if err != nil && err != gocui.ErrUnknownView {
@@ -116,8 +115,6 @@ func (f *Frontend) layout(g *gocui.Gui) error {
 	fmt.Fprintln(help, "     ↵ : Connect")
 	fmt.Fprintln(help, "     ^C: Exit")
 	fmt.Fprintln(help, " F1-F12: Direct selection")
-	// fmt.Fprintf(help, " Origin x,y: %d,%d", oX, oY)
-	// fmt.Fprintf(help, " Index: %d", i)
 
 	if _, err := g.SetCurrentView("main"); err != nil {
 		return err

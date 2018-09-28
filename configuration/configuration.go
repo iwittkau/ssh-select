@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/user"
+	"runtime"
 
 	"github.com/iwittkau/ssh-select"
 	"gopkg.in/yaml.v2"
@@ -60,17 +61,31 @@ func WriteToUserHomeDir(conf *sshselect.Configuration) error {
 
 // Init initializes a configuration file in the users home directory
 func Init() error {
+
+	var system string
+
+	switch runtime.GOOS {
+	case "darwin":
+		system = "macos"
+	case "linux":
+		system = "gnome"
+	default:
+		system = ""
+	}
+
 	c := sshselect.Configuration{
+		StayOpen: false,
+		System:   system,
 		Servers: []sshselect.Server{
 			sshselect.Server{
 				Name:      "Server 1 (Example)",
-				IpAddress: "192.168.0.1",
+				IPAddress: "192.168.0.1",
 				Username:  "username",
 				Profile:   "Homebrew",
 			},
 			sshselect.Server{
 				Name:      "Server 2 (Example)",
-				IpAddress: "192.168.0.2",
+				IPAddress: "192.168.0.2",
 				Username:  "username",
 				Profile:   "Homebrew",
 			},

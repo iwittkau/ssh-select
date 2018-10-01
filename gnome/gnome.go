@@ -3,11 +3,18 @@ package gnome
 import (
 	"fmt"
 	"os/exec"
+
+	"github.com/iwittkau/ssh-select"
 )
 
 // NewSSHTerminalWindow opens a new gnome-terminal window
 // gnome-terminal --profile=[PROFILE_NAME] -- [COMMAND]
-func NewSSHTerminalWindow(username, server, profile string) error {
-	cmd := exec.Command("gnome-terminal", fmt.Sprintf("--profile=%s", profile), "--", "ssh", fmt.Sprintf("%s@%s", username, server))
+func NewSSHTerminalWindow(server sshselect.Server) error {
+	var cmd *exec.Cmd
+	if server.Port == "" {
+		cmd = exec.Command("gnome-terminal", fmt.Sprintf("--profile=%s", server.Profile), "--", "ssh", fmt.Sprintf("%s@%s", server.Username, server.IPAddress))
+	} else {
+		cmd = exec.Command("gnome-terminal", fmt.Sprintf("--profile=%s", server.Profile), "--", "ssh", "-p", server.Port, fmt.Sprintf("%s@%s", server.Username, server.IPAddress))
+	}
 	return cmd.Run()
 }

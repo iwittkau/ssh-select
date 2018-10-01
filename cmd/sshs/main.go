@@ -115,8 +115,7 @@ func main() {
 			switch config.System {
 
 			case sshselect.SystemMacOS:
-
-				err = osascript.NewSSHTerminalWindow(config.Servers[i].Username, config.Servers[i].IPAddress)
+				err = osascript.NewSSHTerminalWindow(config.Servers[i])
 				if err != nil {
 					fmt.Println("Error:", err)
 				}
@@ -127,14 +126,18 @@ func main() {
 				}
 
 			case sshselect.SystemGnome:
-				err = gnome.NewSSHTerminalWindow(config.Servers[i].Username, config.Servers[i].IPAddress, config.Servers[i].Profile)
+				err = gnome.NewSSHTerminalWindow(config.Servers[i])
 				if err != nil {
 					fmt.Println("Error:", err)
 				}
 			}
 
 			if cm != nil {
-				cm.Add(config.Servers[i].Username+"@"+config.Servers[i].IPAddress, "")
+				if config.Servers[i].Port == "" {
+					cm.Add(config.Servers[i].Username+"@"+config.Servers[i].IPAddress, "")
+				} else {
+					cm.Add("-p "+config.Servers[i].Port+" "+config.Servers[i].Username+"@"+config.Servers[i].IPAddress, "")
+				}
 				cm.Persist()
 			}
 

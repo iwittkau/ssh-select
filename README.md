@@ -6,6 +6,8 @@
 
 ```bash
 go get -u github.com/iwittkau/ssh-select
+cd $GOPATH/src/github.com/iwittkau/ssh-select/cmd/sshs
+go get ./...
 go install github.com/iwittkau/ssh-select/cmd/sshs
 ```
 
@@ -31,6 +33,7 @@ servers:
   ipaddress: nas.local
   username: nas-admin
   profile: Pro
+  port: 2222
 ```
 
 #### General Options
@@ -44,11 +47,14 @@ servers:
 `ipaddress` - the IP address to connect to  
 `username` -  the username  
 `profile` - name of the Terminal.app profile
+`port` - set a non-default port
 
 
 ## Usage
 
 ```bash
-sshs
+sshs [index]
 ```
+
+`index` optional number, directly sets up a connection with the corresponding index of your configuration file (also shown in the "ui").
 

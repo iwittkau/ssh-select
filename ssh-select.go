@@ -19,7 +19,8 @@ type Server struct {
 	IPAddress string
 	Username  string
 	Profile   string
-	Index     int `yaml:",omitempty"`
+	Port      string `yaml:",omitempty"`
+	Index     int    `yaml:",omitempty"`
 }
 
 // Frontend is the needs to be implemented by a cli frontend

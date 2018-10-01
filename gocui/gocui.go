@@ -100,7 +100,12 @@ func (f *Frontend) layout(g *gocui.Gui) error {
 	detail.Title = " Connection Details "
 	fmt.Fprintln(detail, " ")
 	fmt.Fprintf(detail, " Host     : %s\n", f.conf.Servers[i].IPAddress)
-	fmt.Fprintf(detail, " Username : %s\n\n", f.conf.Servers[i].Username)
+	fmt.Fprintf(detail, " Username : %s\n", f.conf.Servers[i].Username)
+	if f.conf.Servers[i].Port == "" {
+		fmt.Fprintf(detail, " Port     : %s\n\n", "default")
+	} else {
+		fmt.Fprintf(detail, " Port     : %s\n\n", f.conf.Servers[i].Port)
+	}
 	fmt.Fprintf(detail, " Profile  : %s\n", f.conf.Servers[i].Profile)
 
 	help, err := g.SetView("help", maxX-30, maxY-9, maxX-1, maxY-1)

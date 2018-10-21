@@ -4,12 +4,14 @@ package sshselect
 const (
 	SystemMacOS = "macos"
 	SystemGnome = "gnome"
+	SystemITerm = "iterm"
 )
 
 // Configuration ist the struct that holds the SSH-Select configuration located at the users home path
 type Configuration struct {
 	System   string
 	StayOpen bool
+	UseTabs  bool `yaml:",omitempty"`
 	Servers  []Server
 }
 

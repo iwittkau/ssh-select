@@ -3,13 +3,11 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/hako/durafmt"
 	"github.com/iwittkau/ssh-select"
-
-	"strconv"
-
 	"github.com/iwittkau/ssh-select/configuration"
 	"github.com/iwittkau/ssh-select/gnome"
 	"github.com/iwittkau/ssh-select/gocui"
@@ -18,12 +16,39 @@ import (
 	flag "github.com/ogier/pflag"
 )
 
+var help = `
+usage:  sshs [id]   (id corresponds to an id shown in the terminal ui
+                    and can be used for quickstart)
+
+             --init  (creates an example configuration file in the 
+                     user's home directory: '~/.ssh-config')
+
+        sample configuration (~/.sshs-config):
+    
+            system: macos
+            stayopen: true
+            usetabs: true # currently only supported by iTerm2 system setting
+            servers:
+            - name: raspberry
+              ipaddress: 192.168.1.2
+              username: pi
+              profile: Default
+              port: 22
+    
+        supported system: 
+            macos (standard macOS Terminal.app)
+            gnome (linux running GNOME)
+            iterm (iTerm2)
+`
+
 const cpm = int64(200)
 
 func main() {
 	var init bool
 	flag.BoolVar(&init, "init", false, "Creates an example configuration file in the user's home directory: '~/.ssh-config'")
-
+	flag.Usage = func() {
+		fmt.Println(help)
+	}
 	flag.Parse()
 
 	config, err := configuration.ReadFromUserHomeDir()
@@ -36,7 +61,7 @@ func main() {
 			return
 		}
 		metric.InitMetricFile()
-		fmt.Println("\nAn example configuration file has been created at '~/.sshs-config'.\nPlease open it an check the 'system' setting. Use 'gnome' if you are on Linux or 'macos' if you use macOS.\n ")
+		fmt.Println("\nAn example configuration file has been created at '~/.sshs-config'.\nPlease open it an check the 'system' setting. Refer to 'sshs -h' for supported systems.\n ")
 		return
 	} else if err == nil && init {
 		fmt.Println("  --init ignored because existing configuration would be overwritten.")
@@ -44,13 +69,13 @@ func main() {
 	}
 
 	switch config.System {
-	case sshselect.SystemMacOS, sshselect.SystemGnome:
+	case sshselect.SystemMacOS, sshselect.SystemGnome, sshselect.SystemITerm:
 		break
 	case "":
-		fmt.Println("\nSystem not set! Please open '~/.sshs-config' an set the 'system' setting to 'gnome' or 'macos' depending on which of the one you currently use.\n ")
+		fmt.Println("\nSystem not set! Please open '~/.sshs-config' an set the 'system' setting. Refer to 'sshs -h' for supported systems.\n ")
 		return
 	default:
-		fmt.Printf("\n~/.sshs-config: setting 'system: %s' not supported!\nPlease use 'gnome' or 'macos' for 'system'.\n\n", config.System)
+		fmt.Printf("\n~/.sshs-config: setting 'system: %s' not supported!\nRefer to 'sshs -h' for supported systems.\n\n", config.System)
 		return
 	}
 
@@ -129,6 +154,18 @@ func main() {
 				err = gnome.NewSSHTerminalWindow(config.Servers[i])
 				if err != nil {
 					fmt.Println("Error:", err)
+				}
+			case sshselect.SystemITerm:
+				if config.UseTabs {
+					err = osascript.NewSSHITermTab(config.Servers[i], config.Servers[i].Profile)
+					if err != nil {
+						fmt.Println("Error:", err)
+					}
+				} else {
+					err = osascript.NewSSHITermWindow(config.Servers[i], config.Servers[i].Profile)
+					if err != nil {
+						fmt.Println("Error:", err)
+					}
 				}
 			}
 

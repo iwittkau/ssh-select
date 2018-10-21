@@ -16,18 +16,21 @@ import (
 	flag "github.com/ogier/pflag"
 )
 
-var help = `
+var (
+	help = `
 usage:  sshs [id]   (id corresponds to an id shown in the terminal ui
                     and can be used for quickstart)
 
              --init  (creates an example configuration file in the 
                      user's home directory: '~/.ssh-config')
 
+             --version (prints the current version)
+
         sample configuration (~/.sshs-config):
     
             system: macos
             stayopen: true
-            usetabs: true # currently only supported by iTerm2 system setting
+            usetabs: true # currently only used by iTerm2 'system' setting
             servers:
             - name: raspberry
               ipaddress: 192.168.1.2
@@ -41,15 +44,26 @@ usage:  sshs [id]   (id corresponds to an id shown in the terminal ui
             iterm (iTerm2)
 `
 
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
+
 const cpm = int64(200)
 
 func main() {
-	var init bool
+	var init, ver bool
 	flag.BoolVar(&init, "init", false, "Creates an example configuration file in the user's home directory: '~/.ssh-config'")
+	flag.BoolVar(&ver, "version", false, "Prints the current version")
 	flag.Usage = func() {
 		fmt.Println(help)
 	}
 	flag.Parse()
+
+	if ver {
+		fmt.Printf("version: %v, commit: %v, built at: %v\n", version, commit, date)
+		os.Exit(0)
+	}
 
 	config, err := configuration.ReadFromUserHomeDir()
 	if err != nil && !init {

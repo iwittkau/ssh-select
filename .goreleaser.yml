@@ -2,14 +2,23 @@
 # Make sure to check the documentation at http://goreleaser.com
 builds:
   -
+    binary: sshs
     main: ./cmd/sshs/main.go
     env:
       - CGO_ENABLED=0
+    goarch:
+      - amd64
+      - arm
+    goarm:
+      - 5
+      - 6
+      - 7
 archive:
   replacements:
     darwin: Darwin
     linux: Linux
     amd64: x86_64
+
 checksum:
   name_template: 'checksums.txt'
 snapshot:

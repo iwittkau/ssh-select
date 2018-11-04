@@ -13,6 +13,7 @@ import (
 	"github.com/iwittkau/ssh-select/gocui"
 	"github.com/iwittkau/ssh-select/metric"
 	"github.com/iwittkau/ssh-select/osascript"
+	"github.com/iwittkau/ssh-select/tmux"
 	flag "github.com/ogier/pflag"
 )
 
@@ -27,21 +28,26 @@ usage:  sshs [id]   (id corresponds to an id shown in the terminal ui
              --version (prints the current version)
 
         sample configuration (~/.sshs-config):
-    
-            system: macos
-            stayopen: true
-            usetabs: true # currently only used by iTerm2 'system' setting
-            servers:
-            - name: raspberry
-              ipaddress: 192.168.1.2
-              username: pi
-              profile: Default
-              port: 22
-    
-        supported system: 
-            macos (standard macOS Terminal.app)
-            gnome (linux running GNOME)
-            iterm (iTerm2)
+		
+	---
+	system: tmux
+	stayopen: true
+	usetabs: true # currently only used by iTerm2 'system' setting
+	servers:
+	- name: raspberry
+		ipaddress: 192.168.1.2
+		username: pi
+		profile: Default
+		port: 22
+	---
+		
+	supported system: 
+		macos (standard macOS Terminal.app)
+		gnome (linux running GNOME)
+		iterm (iTerm2 on macOS)
+		tmux  (tmux, system independent)
+
+	Notice: macOS is a trademark of Apple Inc., registered in the U.S. and other countries.
 `
 
 	version = "dev"
@@ -83,7 +89,7 @@ func main() {
 	}
 
 	switch config.System {
-	case sshselect.SystemMacOS, sshselect.SystemGnome, sshselect.SystemITerm:
+	case sshselect.SystemMacOS, sshselect.SystemGnome, sshselect.SystemITerm, sshselect.SystemTmux:
 		break
 	case "":
 		fmt.Println("\nSystem not set! Please open '~/.sshs-config' an set the 'system' setting. Refer to 'sshs -h' for supported systems.\n ")
@@ -109,7 +115,10 @@ func main() {
 		}
 	}()
 
-	var i int
+	var (
+		i           int
+		preselected bool
+	)
 
 	if len(os.Args) == 2 {
 
@@ -127,18 +136,21 @@ func main() {
 			return
 		}
 
+		preselected = true
 		i--
 
-	} else {
+	}
 
-		for {
+	for {
+
+		if !preselected {
 
 			var selected bool
 
 			f, err := gocui.New(config)
 
 			if err != nil {
-				fmt.Println("", err)
+				fmt.Println("", err.Error())
 				return
 			}
 
@@ -150,53 +162,61 @@ func main() {
 			} else if !selected {
 				return
 			}
-
-			switch config.System {
-
-			case sshselect.SystemMacOS:
-				err = osascript.NewSSHTerminalWindow(config.Servers[i])
-				if err != nil {
-					fmt.Println("Error:", err)
-				}
-
-				err = osascript.SetFrontmostTerminalWindowToProfile(config.Servers[i].Profile)
-				if err != nil {
-					fmt.Println("Error:", err)
-				}
-
-			case sshselect.SystemGnome:
-				err = gnome.NewSSHTerminalWindow(config.Servers[i])
-				if err != nil {
-					fmt.Println("Error:", err)
-				}
-			case sshselect.SystemITerm:
-				if config.UseTabs {
-					err = osascript.NewSSHITermTab(config.Servers[i], config.Servers[i].Profile)
-					if err != nil {
-						fmt.Println("Error:", err)
-					}
-				} else {
-					err = osascript.NewSSHITermWindow(config.Servers[i], config.Servers[i].Profile)
-					if err != nil {
-						fmt.Println("Error:", err)
-					}
-				}
-			}
-
-			if cm != nil {
-				if config.Servers[i].Port == "" {
-					cm.Add(config.Servers[i].Username+"@"+config.Servers[i].IPAddress, "")
-				} else {
-					cm.Add("-p "+config.Servers[i].Port+" "+config.Servers[i].Username+"@"+config.Servers[i].IPAddress, "")
-				}
-				cm.Persist()
-			}
-
-			if !config.StayOpen {
-				break
-			}
-
 		}
+
+		switch config.System {
+
+		case sshselect.SystemMacOS:
+			err = osascript.NewSSHTerminalWindow(config.Servers[i])
+			if err != nil {
+				fmt.Println("Error:", err.Error())
+			}
+
+			err = osascript.SetFrontmostTerminalWindowToProfile(config.Servers[i].Profile)
+			if err != nil {
+				fmt.Println("Error:", err.Error())
+			}
+
+		case sshselect.SystemGnome:
+			err = gnome.NewSSHTerminalWindow(config.Servers[i])
+			if err != nil {
+				fmt.Println("Error:", err.Error())
+			}
+		case sshselect.SystemITerm:
+			if config.UseTabs {
+				err = osascript.NewSSHITermTab(config.Servers[i], config.Servers[i].Profile)
+				if err != nil {
+					fmt.Println("Error:", err.Error())
+				}
+			} else {
+				err = osascript.NewSSHITermWindow(config.Servers[i], config.Servers[i].Profile)
+				if err != nil {
+					fmt.Println("Error:", err.Error())
+				}
+			}
+		case sshselect.SystemTmux:
+			err = tmux.NewSSHTerminalWindow(config.Servers[i])
+			if err == sshselect.ErrTmuxNotAttached {
+				os.Exit(0)
+			} else if err != nil {
+				fmt.Println("Error:", err.Error())
+				os.Exit(0)
+			}
+		}
+
+		if cm != nil {
+			if config.Servers[i].Port == "" {
+				cm.Add(config.Servers[i].Username+"@"+config.Servers[i].IPAddress, "")
+			} else {
+				cm.Add("-p "+config.Servers[i].Port+" "+config.Servers[i].Username+"@"+config.Servers[i].IPAddress, "")
+			}
+			cm.Persist()
+		}
+
+		if !config.StayOpen || preselected {
+			break
+		}
+
 	}
 
 }

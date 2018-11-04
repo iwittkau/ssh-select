@@ -68,26 +68,26 @@ func Init() error {
 	case "darwin":
 		system = "macos"
 	case "linux":
-		system = "gnome"
+		system = "tmux"
 	default:
-		system = ""
+		system = "tmux"
 	}
 
 	c := sshselect.Configuration{
-		StayOpen: false,
+		StayOpen: true,
 		System:   system,
 		Servers: []sshselect.Server{
 			sshselect.Server{
 				Name:      "Server 1 (Example)",
 				IPAddress: "192.168.0.1",
 				Username:  "username",
-				Profile:   "Homebrew",
+				Profile:   "Default",
 			},
 			sshselect.Server{
 				Name:      "Server 2 (Example)",
 				IPAddress: "192.168.0.2",
 				Username:  "username",
-				Profile:   "Homebrew",
+				Profile:   "Default",
 			},
 		},
 	}

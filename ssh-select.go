@@ -5,6 +5,7 @@ const (
 	SystemMacOS = "macos"
 	SystemGnome = "gnome"
 	SystemITerm = "iterm"
+	SystemTmux  = "tmux"
 )
 
 // Configuration ist the struct that holds the SSH-Select configuration located at the users home path

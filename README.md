@@ -46,7 +46,7 @@ servers:
 `name` - name of the connection  
 `ipaddress` - the IP address to connect to  
 `username` -  the username  
-`profile` - name of the Terminal.app profile
+`profile` - name of the Terminal.app, Gnome Terminal or iTerm profile
 `port` - set a non-default port
 
 

@@ -2,8 +2,8 @@ package osascript
 
 import (
 	"fmt"
+	"os/exec"
 
-	"github.com/everdev/mack"
 	"github.com/iwittkau/ssh-select"
 )
 
@@ -11,9 +11,9 @@ import (
 func NewSSHTerminalWindow(server sshselect.Server) error {
 	var err error
 	if server.Port == "" {
-		_, err = mack.Tell("Terminal", fmt.Sprintf("do script(\"ssh %s@%s\")", server.Username, server.IPAddress))
+		err = exec.Command("osascript", "-e", fmt.Sprintf("tell application \"Terminal\" to do script \"ssh %s@%s\"", server.Username, server.IPAddress)).Run()
 	} else {
-		_, err = mack.Tell("Terminal", fmt.Sprintf("do script(\"ssh -p %s %s@%s\")", server.Port, server.Username, server.IPAddress))
+		err = exec.Command("osascript", "-e", fmt.Sprintf("tell application \"Terminal\" to do script \"ssh -p %s %s@%s\"", server.Port, server.Username, server.IPAddress)).Run()
 	}
 
 	return err
@@ -21,7 +21,7 @@ func NewSSHTerminalWindow(server sshselect.Server) error {
 
 // SetFrontmostTerminalWindowToProfile sets the active window to desired profile
 func SetFrontmostTerminalWindowToProfile(profile string) error {
-	_, err := mack.Tell("Terminal", fmt.Sprintf("set current settings of front window to (first settings set whose name is \"%s\")", profile))
+	err := exec.Command("osascript", "-e", fmt.Sprintf("tell application \"Terminal\" to set current settings of front window to (first settings set whose name is \"%s\")", profile)).Run()
 	return err
 }
 
@@ -29,9 +29,9 @@ func SetFrontmostTerminalWindowToProfile(profile string) error {
 func NewSSHITermWindow(server sshselect.Server, profile string) error {
 	var err error
 	if server.Port == "" {
-		_, err = mack.Tell("iTerm2", fmt.Sprintf("create window with profile \"%s\" command \"ssh %s@%s\"", profile, server.Username, server.IPAddress))
+		err = exec.Command("osascript", "-e", fmt.Sprintf("tell application \"iTerm2\" to create window with profile \"%s\" command \"ssh %s@%s\"", profile, server.Username, server.IPAddress)).Run()
 	} else {
-		_, err = mack.Tell("iTerm2", fmt.Sprintf("create window with profile \"%s\" command \"ssh -p %s %s@%s\"", profile, server.Port, server.Username, server.IPAddress))
+		err = exec.Command("osascript", "-e", fmt.Sprintf("tell application \"iTerm2\" to create window with profile \"%s\" command \"ssh -p %s %s@%s\"", profile, server.Port, server.Username, server.IPAddress)).Run()
 	}
 	return err
 }
@@ -40,9 +40,9 @@ func NewSSHITermWindow(server sshselect.Server, profile string) error {
 func NewSSHITermTab(server sshselect.Server, profile string) error {
 	var err error
 	if server.Port == "" {
-		_, err = mack.Tell("iTerm2", fmt.Sprintf("tell current window\ncreate tab with profile \"%s\" command \"ssh %s@%s\"\nend tell", profile, server.Username, server.IPAddress))
+		err = exec.Command("osascript", "-e", fmt.Sprintf("tell application \"iTerm2\" to tell current window to create tab with profile \"%s\" command \"ssh %s@%s\"", profile, server.Username, server.IPAddress)).Run()
 	} else {
-		_, err = mack.Tell("iTerm2", fmt.Sprintf("tell current window\ncreate tab with profile \"%s\" command \"ssh -p %s %s@%s\"\nend tell", profile, server.Port, server.Username, server.IPAddress))
+		err = exec.Command("osascript", "-e", fmt.Sprintf("tell application \"iTerm2\" to tell current window to create tab with profile \"%s\" command \"ssh %s@%s\"", profile, server.Username, server.IPAddress)).Run()
 	}
 	return err
 }

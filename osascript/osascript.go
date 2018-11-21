@@ -42,7 +42,7 @@ func NewSSHITermTab(server sshselect.Server, profile string) error {
 	if server.Port == "" {
 		err = exec.Command("osascript", "-e", fmt.Sprintf("tell application \"iTerm2\" to tell current window to create tab with profile \"%s\" command \"ssh %s@%s\"", profile, server.Username, server.IPAddress)).Run()
 	} else {
-		err = exec.Command("osascript", "-e", fmt.Sprintf("tell application \"iTerm2\" to tell current window to create tab with profile \"%s\" command \"ssh %s@%s\"", profile, server.Username, server.IPAddress)).Run()
+		err = exec.Command("osascript", "-e", fmt.Sprintf("tell application \"iTerm2\" to tell current window to create tab with profile \"%s\" command \"ssh -p %s %s@%s\"", profile, server.Port, server.Username, server.IPAddress)).Run()
 	}
 	return err
 }

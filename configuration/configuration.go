@@ -7,8 +7,8 @@ import (
 	"os/user"
 	"runtime"
 
-	"github.com/iwittkau/ssh-select"
-	"gopkg.in/yaml.v2"
+	sshselect "github.com/iwittkau/ssh-select"
+	yaml "gopkg.in/yaml.v2"
 )
 
 // ReadFromUserHomeDir reads the SSH-Select configuration from the user's home directory
@@ -117,8 +117,28 @@ func Init() error {
 				IPAddress: "192.168.0.2",
 				Username:  "username",
 				Profile:   "Default",
+				Tunnel: []sshselect.TunnelConfiguration{
+					{
+						Port:     "8080",
+						HostPort: "80",
+						Host:     "localhost",
+					},
+				},
 			},
 		},
 	}
 	return WriteToUserHomeDir(&c)
+}
+
+// BuildSSHCmdTunnelConfigStr builds a string with the tunnel configuration attached
+func BuildSSHCmdTunnelConfigStr(tun []sshselect.TunnelConfiguration) (tunStr string) {
+	tunStr = "ssh"
+	if tun != nil {
+		if len(tun) > 0 {
+			for i := range tun {
+				tunStr = fmt.Sprintf("%s -L %s:%s:%s", tunStr, tun[i].Port, tun[i].Host, tun[i].HostPort)
+			}
+		}
+	}
+	return
 }

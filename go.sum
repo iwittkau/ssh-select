@@ -1,5 +1,3 @@
-github.com/everdev/mack v0.0.0-20180604194106-83ad607f6010 h1:YCE+Yya5u0KNa1ML5qCfRzoFLwDovb2D+0TPS9F0n+I=
-github.com/everdev/mack v0.0.0-20180604194106-83ad607f6010/go.mod h1:9b3JPh49iYN2BWgsGwc77VTYIni+FpwOH8f7oanwA6M=
 github.com/hako/durafmt v0.0.0-20180520121703-7b7ae1e72ead h1:Y9WOGZY2nw5ksbEf5AIpk+vK52Tdg/VN/rHFRfEeeGQ=
 github.com/hako/durafmt v0.0.0-20180520121703-7b7ae1e72ead/go.mod h1:5Scbynm8dF1XAPwIwkGPqzkM/shndPm79Jd1003hTjE=
 github.com/jroimartin/gocui v0.4.0 h1:52jnalstgmc25FmtGcWqa0tcbMEWS6RpFLsOIO+I+E8=

@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/hako/durafmt"
-	"github.com/iwittkau/ssh-select"
+	sshselect "github.com/iwittkau/ssh-select"
 	"github.com/iwittkau/ssh-select/configuration"
 	"github.com/iwittkau/ssh-select/gnome"
 	"github.com/iwittkau/ssh-select/gocui"
@@ -71,21 +71,30 @@ func main() {
 		os.Exit(0)
 	}
 
-	config, err := configuration.ReadFromUserHomeDir()
-	if err != nil && !init {
-		fmt.Println("Configuration error: " + err.Error() + ".\nRun 'sshs --help' for more information.")
-		return
-	} else if err != nil && init {
-		if err := configuration.Init(); err != nil {
-			fmt.Println("Error creating configuration: " + err.Error())
+	var config *sshselect.Configuration
+	var err error
+	var localConf bool
+	if config, err = configuration.ReadFromWorkingDirectory(); err == nil {
+		localConf = true
+	}
+
+	if !localConf {
+		config, err = configuration.ReadFromUserHomeDir()
+		if err != nil && !init {
+			fmt.Println("Configuration error: " + err.Error() + ".\nRun 'sshs --help' for more information.")
+			return
+		} else if err != nil && init {
+			if err := configuration.Init(); err != nil {
+				fmt.Println("Error creating configuration: " + err.Error())
+				return
+			}
+			metric.InitMetricFile()
+			fmt.Println("\nAn example configuration file has been created at '~/.sshs-config'.\nPlease open it an check the 'system' setting. Refer to 'sshs -h' for supported systems.\n ")
+			return
+		} else if err == nil && init {
+			fmt.Println("  --init ignored because existing configuration would be overwritten.")
 			return
 		}
-		metric.InitMetricFile()
-		fmt.Println("\nAn example configuration file has been created at '~/.sshs-config'.\nPlease open it an check the 'system' setting. Refer to 'sshs -h' for supported systems.\n ")
-		return
-	} else if err == nil && init {
-		fmt.Println("  --init ignored because existing configuration would be overwritten.")
-		return
 	}
 
 	switch config.System {

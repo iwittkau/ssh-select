@@ -41,6 +41,35 @@ func ReadFromUserHomeDir() (*sshselect.Configuration, error) {
 
 }
 
+// ReadFromWorkingDirectory reads the SSH-Select configuration from the current working directory
+func ReadFromWorkingDirectory() (*sshselect.Configuration, error) {
+
+	config := sshselect.Configuration{}
+
+	if _, err := os.Stat(".sshs"); err != nil {
+		return nil, err
+	}
+
+	data, err := ioutil.ReadFile(".sshs")
+	if err != nil {
+		return nil, err
+	}
+	err = yaml.Unmarshal([]byte(data), &config)
+	if err != nil {
+		return nil, err
+	}
+
+	servers := &config.Servers
+
+	for k, v := range *servers {
+		v.Index = k + 1
+		(*servers)[k] = v
+	}
+
+	return &config, nil
+
+}
+
 // WriteToUserHomeDir writes the SSH-Select configuration to the user's home directory
 func WriteToUserHomeDir(conf *sshselect.Configuration) error {
 

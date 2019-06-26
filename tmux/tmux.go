@@ -7,7 +7,7 @@ import (
 	"os/exec"
 	"strings"
 
-	sshselect "github.com/iwittkau/ssh-select"
+	sshselect "github.com/5FeetUnder/ssh-select"
 )
 
 const (

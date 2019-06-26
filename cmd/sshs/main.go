@@ -6,14 +6,14 @@ import (
 	"strconv"
 	"time"
 
+	sshselect "github.com/5FeetUnder/ssh-select"
+	"github.com/5FeetUnder/ssh-select/configuration"
+	"github.com/5FeetUnder/ssh-select/gnome"
+	"github.com/5FeetUnder/ssh-select/gocui"
+	"github.com/5FeetUnder/ssh-select/metric"
+	"github.com/5FeetUnder/ssh-select/osascript"
+	"github.com/5FeetUnder/ssh-select/tmux"
 	"github.com/hako/durafmt"
-	sshselect "github.com/iwittkau/ssh-select"
-	"github.com/iwittkau/ssh-select/configuration"
-	"github.com/iwittkau/ssh-select/gnome"
-	"github.com/iwittkau/ssh-select/gocui"
-	"github.com/iwittkau/ssh-select/metric"
-	"github.com/iwittkau/ssh-select/osascript"
-	"github.com/iwittkau/ssh-select/tmux"
 	flag "github.com/ogier/pflag"
 )
 
@@ -98,7 +98,7 @@ func main() {
 	}
 
 	switch config.System {
-	case sshselect.SystemMacOS, sshselect.SystemGnome, sshselect.SystemITerm, sshselect.SystemTmux:
+	case sshselect.SystemMacOS, sshselect.SystemGnome, sshselect.SystemITerm, sshselect.SystemTmux, sshselect.SystemPlink:
 		break
 	case "":
 		fmt.Println("\nSystem not set! Please open '~/.sshs-config' an set the 'system' setting. Refer to 'sshs -h' for supported systems.\n ")

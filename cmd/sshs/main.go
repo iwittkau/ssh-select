@@ -47,6 +47,7 @@ usage:  sshs [id]   (id corresponds to an id shown in the terminal ui
 		gnome (linux running GNOME)
 		iterm (iTerm2 on macOS)
 		tmux  (tmux, system independent)
+		putty (putty on windows)
 
 	Notice: macOS is a trademark of Apple Inc., registered in the U.S. and other countries.
 `

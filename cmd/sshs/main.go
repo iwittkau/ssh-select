@@ -12,6 +12,7 @@ import (
 	"github.com/5FeetUnder/ssh-select/gocui"
 	"github.com/5FeetUnder/ssh-select/metric"
 	"github.com/5FeetUnder/ssh-select/osascript"
+	"github.com/5FeetUnder/ssh-select/plink"
 	"github.com/5FeetUnder/ssh-select/tmux"
 	"github.com/hako/durafmt"
 	flag "github.com/ogier/pflag"
@@ -210,6 +211,11 @@ func main() {
 			} else if err != nil {
 				fmt.Println("Error:", err.Error())
 				os.Exit(0)
+			}
+		case sshselect.SystemPlink:
+			err = plink.NewSSHTerminalWindow(config.Servers[i])
+			if err != nil {
+				fmt.Println("Error", err.Error())
 			}
 		}
 

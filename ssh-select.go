@@ -6,7 +6,6 @@ const (
 	SystemGnome = "gnome"
 	SystemITerm = "iterm"
 	SystemTmux  = "tmux"
-	SystemPlink = "plink"
 	SystemPutty = "putty"
 )
 

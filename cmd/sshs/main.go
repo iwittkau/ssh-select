@@ -12,7 +12,6 @@ import (
 	"github.com/5FeetUnder/ssh-select/gocui"
 	"github.com/5FeetUnder/ssh-select/metric"
 	"github.com/5FeetUnder/ssh-select/osascript"
-	"github.com/5FeetUnder/ssh-select/plink"
 	"github.com/5FeetUnder/ssh-select/putty"
 	"github.com/5FeetUnder/ssh-select/tmux"
 	"github.com/hako/durafmt"
@@ -100,7 +99,7 @@ func main() {
 	}
 
 	switch config.System {
-	case sshselect.SystemMacOS, sshselect.SystemGnome, sshselect.SystemITerm, sshselect.SystemTmux, sshselect.SystemPlink, sshselect.SystemPutty:
+	case sshselect.SystemMacOS, sshselect.SystemGnome, sshselect.SystemITerm, sshselect.SystemTmux, sshselect.SystemPutty:
 		break
 	case "":
 		fmt.Println("\nSystem not set! Please open '~/.sshs-config' an set the 'system' setting. Refer to 'sshs -h' for supported systems.\n ")
@@ -212,11 +211,6 @@ func main() {
 			} else if err != nil {
 				fmt.Println("Error:", err.Error())
 				os.Exit(0)
-			}
-		case sshselect.SystemPlink:
-			err = plink.NewSSHTerminalWindow(config.Servers[i])
-			if err != nil {
-				fmt.Println("Error", err.Error())
 			}
 		case sshselect.SystemPutty:
 			err = putty.NewSSHTerminalWindow(config.Servers[i])

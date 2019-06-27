@@ -6,14 +6,15 @@ import (
 	"strconv"
 	"time"
 
+	sshselect "github.com/5FeetUnder/ssh-select"
+	"github.com/5FeetUnder/ssh-select/configuration"
+	"github.com/5FeetUnder/ssh-select/gnome"
+	"github.com/5FeetUnder/ssh-select/gocui"
+	"github.com/5FeetUnder/ssh-select/metric"
+	"github.com/5FeetUnder/ssh-select/osascript"
+	"github.com/5FeetUnder/ssh-select/putty"
+	"github.com/5FeetUnder/ssh-select/tmux"
 	"github.com/hako/durafmt"
-	sshselect "github.com/iwittkau/ssh-select"
-	"github.com/iwittkau/ssh-select/configuration"
-	"github.com/iwittkau/ssh-select/gnome"
-	"github.com/iwittkau/ssh-select/gocui"
-	"github.com/iwittkau/ssh-select/metric"
-	"github.com/iwittkau/ssh-select/osascript"
-	"github.com/iwittkau/ssh-select/tmux"
 	flag "github.com/ogier/pflag"
 )
 
@@ -46,6 +47,7 @@ usage:  sshs [id]   (id corresponds to an id shown in the terminal ui
 		gnome (linux running GNOME)
 		iterm (iTerm2 on macOS)
 		tmux  (tmux, system independent)
+		putty (putty on windows)
 
 	Notice: macOS is a trademark of Apple Inc., registered in the U.S. and other countries.
 `
@@ -98,7 +100,7 @@ func main() {
 	}
 
 	switch config.System {
-	case sshselect.SystemMacOS, sshselect.SystemGnome, sshselect.SystemITerm, sshselect.SystemTmux:
+	case sshselect.SystemMacOS, sshselect.SystemGnome, sshselect.SystemITerm, sshselect.SystemTmux, sshselect.SystemPutty:
 		break
 	case "":
 		fmt.Println("\nSystem not set! Please open '~/.sshs-config' an set the 'system' setting. Refer to 'sshs -h' for supported systems.\n ")
@@ -210,6 +212,11 @@ func main() {
 			} else if err != nil {
 				fmt.Println("Error:", err.Error())
 				os.Exit(0)
+			}
+		case sshselect.SystemPutty:
+			err = putty.NewSSHTerminalWindow(config.Servers[i])
+			if err != nil {
+				fmt.Println("Error", err.Error())
 			}
 		}
 

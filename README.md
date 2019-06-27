@@ -38,7 +38,13 @@ servers:
 
 #### General Options
 
-`system` - name of the system you use, either `macos` for macOS or `gnome` for GNOME terminals are supported.   
+`system` - name of the system you use. Supported systems so far:
+* `macos` for macOS standard terminals
+* `gnome` for GNOME terminals on linux
+* `iterm` for iTerm terminals on macOS
+* `tmux` for tmux terminals on multiple platforms
+* `putty` for PuTTY terminals on Windows   
+
 `stayopen` - leave `sshs` open after a server selection: `true` or `false`
 
 #### Connection Options

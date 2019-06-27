@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/iwittkau/ssh-select"
+	"github.com/5FeetUnder/ssh-select"
 
 	"github.com/jroimartin/gocui"
 )

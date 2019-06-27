@@ -2,7 +2,6 @@ package putty
 
 import (
 	"fmt"
-	"os"
 	"os/exec"
 
 	sshselect "github.com/iwittkau/ssh-select"
@@ -16,10 +15,6 @@ func NewSSHTerminalWindow(server sshselect.Server) error {
 	} else {
 		cmd = exec.Command("putty", "-P", server.Port, fmt.Sprintf("%s@%s", server.Username, server.IPAddress))
 	}
-
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
 
 	return cmd.Run()
 }

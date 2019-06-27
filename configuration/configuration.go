@@ -7,7 +7,7 @@ import (
 	"os/user"
 	"runtime"
 
-	sshselect "github.com/5FeetUnder/ssh-select"
+	sshselect "github.com/iwittkau/ssh-select"
 	yaml "gopkg.in/yaml.v2"
 )
 

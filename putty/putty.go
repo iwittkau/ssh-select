@@ -8,6 +8,7 @@ import (
 	sshselect "github.com/5FeetUnder/ssh-select"
 )
 
+// NewSSHTerminalWindow opens a new PuTTY SSH terminal window for the selected server
 func NewSSHTerminalWindow(server sshselect.Server) error {
 	var cmd *exec.Cmd
 	if server.Port == "" {

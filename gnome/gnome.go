@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os/exec"
 
-	"github.com/iwittkau/ssh-select"
+	sshselect "github.com/iwittkau/ssh-select"
 )
 
 // NewSSHTerminalWindow opens a new gnome-terminal window

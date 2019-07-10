@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os/exec"
 
-	"github.com/5FeetUnder/ssh-select/configuration"
+	"github.com/iwittkau/ssh-select/configuration"
 
-	sshselect "github.com/5FeetUnder/ssh-select"
+	sshselect "github.com/iwittkau/ssh-select"
 )
 
 // NewSSHTerminalWindow opens a new macos Terminal.app window for the selected server

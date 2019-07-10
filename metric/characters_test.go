@@ -3,7 +3,7 @@ package metric_test
 import (
 	"testing"
 
-	"github.com/5FeetUnder/ssh-select/metric"
+	"github.com/iwittkau/ssh-select/metric"
 )
 
 func TestCharacter(t *testing.T) {

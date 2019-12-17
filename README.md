@@ -4,11 +4,18 @@
 
 ## Installation
 
+***Requires Go***
+
+Latest version (master should be stable)
+
 ```bash
-go get -u github.com/iwittkau/ssh-select
-cd $GOPATH/src/github.com/iwittkau/ssh-select/cmd/sshs
-go get ./...
-go install github.com/iwittkau/ssh-select/cmd/sshs
+go get github.com/iwittkau/ssh-select/cmd/sshs@master
+```
+
+Latest release
+
+```bash
+go get github.com/iwittkau/ssh-select/cmd/sshs@latest
 ```
 
 ## Setup

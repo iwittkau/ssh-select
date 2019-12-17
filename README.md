@@ -4,6 +4,12 @@
 
 ## Installation
 
+### Download
+
+Download the latest version from the [releases](https://github.com/iwittkau/ssh-select/releases) page.
+
+### Build from source
+
 ***Requires Go***
 
 Latest version (master should be stable)

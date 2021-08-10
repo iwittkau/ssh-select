@@ -56,7 +56,9 @@ servers:
 * `gnome` for GNOME terminals on linux
 * `iterm` for iTerm terminals on macOS
 * `tmux` for tmux terminals on multiple platforms
-* `putty` for PuTTY terminals on Windows   
+* `putty` for PuTTY terminals on Windows
+* `wt` for Windows Terminal tabs on Windows
+* `wtfix` for Windows Terminal tabs on Windows where sshs cannot find wt.exe in `%PATH%`
 
 `stayopen` - leave `sshs` open after a server selection: `true` or `false`
 
@@ -65,7 +67,7 @@ servers:
 `name` - name of the connection  
 `ipaddress` - the IP address to connect to  
 `username` -  the username  
-`profile` - name of the Terminal.app, Gnome Terminal or iTerm profile
+`profile` - name of the Terminal.app, Gnome Terminal, iTerm or Windows Terminal profile  
 `port` - set a non-default port
 
 

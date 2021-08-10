@@ -14,6 +14,7 @@ import (
 	"github.com/iwittkau/ssh-select/osascript"
 	"github.com/iwittkau/ssh-select/putty"
 	"github.com/iwittkau/ssh-select/tmux"
+	"github.com/iwittkau/ssh-select/windowsterminal"
 	"github.com/hako/durafmt"
 	flag "github.com/ogier/pflag"
 )
@@ -100,7 +101,7 @@ func main() {
 	}
 
 	switch config.System {
-	case sshselect.SystemMacOS, sshselect.SystemGnome, sshselect.SystemITerm, sshselect.SystemTmux, sshselect.SystemPutty:
+	case sshselect.SystemMacOS, sshselect.SystemGnome, sshselect.SystemITerm, sshselect.SystemTmux, sshselect.SystemPutty, sshselect.SystemWindowsTerminal, sshselect.SystemWindowsTerminalFix:
 		break
 	case "":
 		fmt.Println("\nSystem not set! Please open '~/.sshs-config' an set the 'system' setting. Refer to 'sshs -h' for supported systems.\n ")
@@ -215,6 +216,16 @@ func main() {
 			}
 		case sshselect.SystemPutty:
 			err = putty.NewSSHTerminalWindow(config.Servers[i])
+			if err != nil {
+				fmt.Println("Error", err.Error())
+			}
+		case sshselect.SystemWindowsTerminal:
+			err = windowsterminal.NewSSHTerminalWindow(config.Servers[i])
+			if err != nil {
+				fmt.Println("Error", err.Error())
+			}
+		case sshselect.SystemWindowsTerminalFix:
+			err = windowsterminal.NewSSHTerminalWindowFix(config.Servers[i])
 			if err != nil {
 				fmt.Println("Error", err.Error())
 			}

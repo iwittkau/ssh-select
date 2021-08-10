@@ -7,6 +7,8 @@ const (
 	SystemITerm = "iterm"
 	SystemTmux  = "tmux"
 	SystemPutty = "putty"
+	SystemWindowsTerminal = "wt"
+	SystemWindowsTerminalFix = "wtfix"
 )
 
 // Configuration ist the struct that holds the SSH-Select configuration located at the users home path

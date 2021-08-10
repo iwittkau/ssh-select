@@ -49,6 +49,8 @@ usage:  sshs [id]   (id corresponds to an id shown in the terminal ui
 		iterm (iTerm2 on macOS)
 		tmux  (tmux, system independent)
 		putty (putty on windows)
+		wt    (Windows Terminal on windows)
+		wtfix (Windows Terminal on windows with fix for wt.exe not found)
 
 	Notice: macOS is a trademark of Apple Inc., registered in the U.S. and other countries.
 `

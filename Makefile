@@ -1,4 +1,4 @@
-PROJECT=github.com/iwittkau/ssh-select/cmd/sshs
+PROJECT=./cmd/sshs
 
 all: install
 
@@ -13,3 +13,6 @@ build-armv6:
 
 build-armv5:
 	GOOS=linux GOARCH=arm GOARM=5 go build -o ./dist/sshs_armv5 ${PROJECT}
+
+windows:
+	GOOS=windows go build -o ./dist/sshs.exe ${PROJECT}

@@ -1,4 +1,4 @@
-PROJECT=./cmd/sshs
+PROJECT=github.com/iwittkau/ssh-select/cmd/sshs
 
 all: install
 

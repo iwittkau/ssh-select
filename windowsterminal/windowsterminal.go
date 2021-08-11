@@ -13,7 +13,7 @@ func NewSSHTerminalWindow(server sshselect.Server) error {
 	if server.Port == "" {
 		cmd = exec.Command("wt", "-p", server.Profile, "ssh", fmt.Sprintf("%s@%s", server.Username, server.IPAddress))
 	} else {
-		cmd = exec.Command("wt", "-p", server.Profile, "ssh", "-P", server.Port, fmt.Sprintf("%s@%s", server.Username, server.IPAddress))
+		cmd = exec.Command("wt", "-p", server.Profile, "ssh", "-p", server.Port, fmt.Sprintf("%s@%s", server.Username, server.IPAddress))
 	}
 
 	return cmd.Run()
@@ -25,7 +25,7 @@ func NewSSHTerminalWindowFix(server sshselect.Server) error {
 	if server.Port == "" {
 		cmd = exec.Command("cmd", "/C", "wt", "-p", server.Profile, "ssh", fmt.Sprintf("%s@%s", server.Username, server.IPAddress))
 	} else {
-		cmd = exec.Command("cmd", "/C", "wt", "-p", server.Profile, "ssh", "-P", server.Port, fmt.Sprintf("%s@%s", server.Username, server.IPAddress))
+		cmd = exec.Command("cmd", "/C", "wt", "-p", server.Profile, "ssh", "-p", server.Port, fmt.Sprintf("%s@%s", server.Username, server.IPAddress))
 	}
 
 	return cmd.Run()

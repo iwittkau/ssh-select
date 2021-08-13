@@ -1,3 +1,7 @@
+
+🌇 Project status: archived - I'm no longer maintaining this 🌇
+===
+
 # ssh-select
 
 ![sshs demo](.github/sshs.gif)
@@ -76,4 +80,3 @@ sshs [index]
 ```
 
 `index` optional number, directly sets up a connection with the corresponding index of your configuration file (also shown in the "ui").
-
